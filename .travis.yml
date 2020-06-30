@@ -28,8 +28,8 @@ jobs:
     - stage: "Build Frappe bench development environment (latest)"
       if: branch = develop AND type != pull_request
       script:
-        - docker build -t frappe/bench:latest -f build/bench/Dockerfile .
-        - docker push frappe/bench:latest
+        - docker build -t rishira1/bench:latest -f build/bench/Dockerfile .
+        - docker push rishira1/bench:latest
     - stage: "Frappe (edge)"
       if: branch = develop AND type != pull_request
       script:
