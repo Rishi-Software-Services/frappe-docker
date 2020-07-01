@@ -1,0 +1,33 @@
+sudo: required
+
+dist: bionic
+
+language: python
+
+python:
+  - '3.6'
+
+services:
+  - docker
+
+before_install:
+  - if [[ "$BUILD" != "development" ]]; then
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
+    sudo apt-get update && sudo apt-get -y install git;
+    fi
+  - if [[ $BUILD == "development" ]];then
+    sudo apt-get update && sudo apt-get -y install docker-compose;
+    fi
+  - chmod u+x ./travis.py
+
+after_success:
+  - docker --version
+
+jobs:
+  include:
+    - stage: "ERPNext (v13-beta)"
+      if: branch = master AND type != pull_request
+      script:
+        - ./travis.py erpnext --worker --git-version 13-beta
+        - ./travis.py erpnext --worker --tag v13-beta --tag-only
+        - ./travis.py erpnext --worker --tag version-13-beta --tag-only
