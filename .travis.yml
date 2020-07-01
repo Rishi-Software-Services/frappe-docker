@@ -36,10 +36,4 @@ jobs:
         - ./travis.py erpnext --worker --git-version 13-beta
         - ./travis.py erpnext --worker --tag v13-beta --tag-only
         - ./travis.py erpnext --worker --tag version-13-beta --tag-only
-    - stage: "ERPNext (v13-beta)"
-      if: branch = master AND type != pull_request
-      script:
-        - ./travis.py erpnext --nginx --git-version 13-beta
-        - ./travis.py erpnext --nginx --tag v13-beta --tag-only
-        - ./travis.py erpnext --nginx --tag version-13-beta --tag-only
     
