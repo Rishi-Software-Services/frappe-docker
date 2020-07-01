@@ -30,24 +30,6 @@ jobs:
       script:
         - docker build -t rishira1/bench:latest -f build/bench/Dockerfile .
         - docker push rishira1/bench:latest
-    - stage: "Frappe (v13-beta)"
-      if: branch = master AND type != pull_request
-      script:
-        - ./travis.py frappe --worker --git-version 13-beta
-        - ./travis.py frappe --worker --tag v13-beta --tag-only
-        - ./travis.py frappe --worker --tag version-13-beta --tag-only
-    - stage: "Frappe (v13-beta)"
-      if: branch = master AND type != pull_request
-      script:
-        - ./travis.py frappe --nginx --git-version 13-beta
-        - ./travis.py frappe --nginx --tag v13-beta --tag-only
-        - ./travis.py frappe --nginx --tag version-13-beta --tag-only
-    - stage: "Frappe (v13-beta)"
-      if: branch = master AND type != pull_request
-      script:
-        - ./travis.py frappe --socketio --git-version 13-beta
-        - ./travis.py frappe --socketio --tag v13-beta --tag-only
-        - ./travis.py frappe --socketio --tag version-13-beta --tag-only
     - stage: "ERPNext (v13-beta)"
       if: branch = master AND type != pull_request
       script:
