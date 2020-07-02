@@ -5,7 +5,7 @@ FROM bitnami/node:${NODE_IMAGE_TAG}
 ARG GIT_BRANCH
 COPY build/erpnext-nginx/install_app.sh /install_app
 
-RUN /install_app erpnext https://github.com/frappe/erpnext ${GIT_BRANCH}
+RUN /install_app erpnext https://github.com/Rishi-Software-Services/erpnext ${GIT_BRANCH}
 
 FROM frappe/frappe-nginx:${GIT_BRANCH}
 

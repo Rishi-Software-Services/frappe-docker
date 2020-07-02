@@ -10,7 +10,7 @@ RUN install_packages git
 ARG GIT_BRANCH=develop
 RUN mkdir -p apps sites/assets/css  \
     && cd apps \
-    && git clone --depth 1 https://github.com/frappe/frappe --branch $GIT_BRANCH
+    && git clone --depth 1 https://github.com/Rishi-Software-Services/frappe --branch $GIT_BRANCH
 
 COPY build/frappe-nginx/generate_standard_style_css.js \
     /home/frappe/frappe-bench/apps/frappe/generate_standard_style_css.js

@@ -36,7 +36,7 @@ RUN mkdir -p apps logs commands /home/frappe/backups
 RUN python -m venv env \
     && . env/bin/activate \
     && cd apps \
-    && git clone --depth 1 -o upstream https://github.com/frappe/frappe --branch ${GIT_BRANCH} \
+    && git clone --depth 1 -o upstream https://github.com/Rishi-Software-Services/frappe --branch ${GIT_BRANCH} \
     && pip3 install --no-cache-dir -e /home/frappe/frappe-bench/apps/frappe
 
 # Copy scripts and templates

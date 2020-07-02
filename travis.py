@@ -25,7 +25,7 @@ def parse_args():
 
 def git_version(service, version, branch):
     print(f'Pulling {service} v{version}')
-    subprocess.run(f'git clone https://github.com/frappe/{service} --branch {branch}', shell=True)
+    subprocess.run(f'git clone https://github.com/Rishi-Software-Services/{service} --branch {branch}', shell=True)
     cd = os.getcwd()
     os.chdir(os.getcwd() + f'/{service}')
     subprocess.run('git fetch --tags', shell=True)
@@ -50,8 +50,8 @@ def build(service, tag, image, branch):
 
 def tag_and_push(image_name, tag):
     print(f'Tagging {image_name} as "{tag}" and pushing')
-    subprocess.run(f'docker tag {image_name} frappe/{image_name}:{tag}', shell=True)
-    subprocess.run(f'docker push frappe/{image_name}:{tag}', shell=True)
+    subprocess.run(f'docker tag {image_name} rishira1/{image_name}:{tag}', shell=True)
+    subprocess.run(f'docker push rishira1/{image_name}:{tag}', shell=True)
 
 
 def main():
