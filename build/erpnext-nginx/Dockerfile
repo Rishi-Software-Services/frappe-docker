@@ -7,7 +7,7 @@ COPY build/erpnext-nginx/install_app.sh /install_app
 
 RUN /install_app erpnext https://github.com/Rishi-Software-Services/erpnext ${GIT_BRANCH}
 
-FROM frappe/frappe-nginx:${GIT_BRANCH}
+FROM rishira1/frappe-nginx:${GIT_BRANCH}
 
 COPY --from=0 /home/frappe/frappe-bench/sites/ /var/www/html/
 COPY --from=0 /rsync /rsync
