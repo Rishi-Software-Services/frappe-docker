@@ -5,6 +5,7 @@
 branch rishira1
 customise erpnext and frappe
 push
+push nginx
 ## Getting Started
 
 ### Try in Play With Docker
