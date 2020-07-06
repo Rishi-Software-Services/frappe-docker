@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  [app]-assets:
-    image: [app]-assets
+  ui-assets:
+    image: ui-assets
     build:
-      context: ../build/[app]-nginx
+      context: ../build/ui-nginx
     restart: on-failure
     environment:
-      - FRAPPE_PY=[app]-python
+      - FRAPPE_PY=ui-python
       - FRAPPE_PY_PORT=8000
       - FRAPPE_SOCKETIO=frappe-socketio
       - SOCKETIO_PORT=9000
@@ -15,13 +15,13 @@ services:
       - VIRTUAL_HOST=${SITES}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     depends_on:
-      - [app]-python
+      - ui-python
       - frappe-socketio
       - frappe-worker-default
       - frappe-worker-long
       - frappe-worker-short
     links:
-      - [app]-python
+      - ui-python
       - frappe-socketio
       - frappe-worker-default
       - frappe-worker-long
@@ -30,10 +30,10 @@ services:
       - sites-vol:/var/www/html/sites:rw
       - assets-vol:/assets:rw
 
-  [app]-python:
-    image: [app]-worker
+  ui-python:
+    image: ui-worker
     build:
-      context: ../build/[app]-worker
+      context: ../build/ui-worker
     restart: on-failure
     environment:
       - MARIADB_HOST=${MARIADB_HOST}
@@ -56,7 +56,7 @@ services:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
   frappe-worker-default:
-    image: [app]-worker
+    image: ui-worker
     restart: on-failure
     command: worker
     depends_on:
@@ -69,7 +69,7 @@ services:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
   frappe-worker-short:
-    image: [app]-worker
+    image: ui-worker
     restart: on-failure
     command: worker
     environment:
@@ -84,7 +84,7 @@ services:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
   frappe-worker-long:
-    image: [app]-worker
+    image: ui-worker
     restart: on-failure
     command: worker
     environment:
@@ -99,7 +99,7 @@ services:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
   frappe-schedule:
-    image: [app]-worker
+    image: ui-worker
     restart: on-failure
     command: schedule
     depends_on:
