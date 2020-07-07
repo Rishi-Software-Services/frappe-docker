@@ -5,6 +5,7 @@ import subprocess
 import os
 
 def parse_args():
+    # ui --worker --tag v1 --tag-only
     parser = argparse.ArgumentParser(description='frappe_docker common CI elements', add_help=True)
 
     parser.add_argument('service', action='store', type=str, help='Name of the service to build: "erpnext" or "frappe"')
@@ -57,7 +58,8 @@ def tag_and_push(image_name, tag):
 def main():
     args = parse_args()
     tag = args.tag
-    branch = 'develop'
+    #branch = 'develop'
+    branch = 'master'
 
     if args.version:
         branch = 'version-' + args.version
