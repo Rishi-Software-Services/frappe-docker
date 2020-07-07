@@ -30,7 +30,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   ui-nginx:
-    image: frappe/ui-nginx:${UI_VERSION}
+    image: rishira1/ui-nginx:${UI_VERSION}
     restart: on-failure
     environment:
       - FRAPPE_PY=ui-python
@@ -48,7 +48,7 @@ services:
       - assets-vol:/assets:rw
 
   ui-python:
-    image: frappe/ui-worker:${UI_VERSION}
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     environment:
       - MARIADB_HOST=${MARIADB_HOST}
@@ -70,7 +70,7 @@ services:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
   ui-worker-default:
-    image: frappe/ui-worker:${UI_VERSION}
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: worker
     depends_on:
@@ -80,7 +80,7 @@ services:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
   ui-worker-short:
-    image: frappe/ui-worker:${UI_VERSION}
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: worker
     environment:
@@ -92,7 +92,7 @@ services:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
   ui-worker-long:
-    image: frappe/ui-worker:${UI_VERSION}
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: worker
     environment:
@@ -104,7 +104,7 @@ services:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
   ui-schedule:
-    image: frappe/ui-worker:${UI_VERSION}
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: schedule
     depends_on:
@@ -141,7 +141,7 @@ services:
       - mariadb-vol:/var/lib/mysql
 
   site-creator:
-    image: frappe/ui-worker:${UI_VERSION}
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: "no"
     command: new
     depends_on:
