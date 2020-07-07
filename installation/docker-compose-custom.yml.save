@@ -1,34 +1,6 @@
 version: '3'
 
 services:
-  traefik:
-    image: "traefik:v2.2"
-    command:
-      - "--log.level=DEBUG"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.email=${LETSENCRYPT_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-    labels:
-      # enable traefik
-      - "traefik.enable=true"
-      # global redirect to https for production only
-      - "${HTTPS_REDIRECT_RULE_LABEL}"
-      - "${HTTPS_REDIRECT_ENTRYPOINT_LABEL}"
-      - "${HTTPS_REDIRECT_MIDDLEWARE_LABEL}"
-      # middleware redirect for production only
-      - "${HTTPS_USE_REDIRECT_MIDDLEWARE_LABEL}"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - cert-vol:/letsencrypt
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-
   redis-cache:
     image: redis:latest
     restart: on-failure
@@ -56,6 +28,13 @@ services:
       - ./frappe-mariadb.cnf:/etc/mysql/conf.d/frappe.cnf
       - mariadb-vol:/var/lib/mysql
 
+volumes:
+  mariadb-vol:
+  redis-cache-vol:
+  redis-queue-vol:
+  redis-socketio-vol:
+
+services:
   ui-assets:
     image: ui-assets
     build:
@@ -69,12 +48,6 @@ services:
       - LETSENCRYPT_HOST=${SITES}
       - VIRTUAL_HOST=${SITES}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ui-assets.rule=Host(${SITES})"
-      - "${ENTRYPOINT_LABEL}"
-      - "${CERT_RESOLVER_LABEL}"
-      - "traefik.http.services.erpnext-assets.loadbalancer.server.port=80"
     depends_on:
       - ui-python
       - frappe-socketio
@@ -172,29 +145,7 @@ services:
     volumes:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
-  site-creator:
-    image: ui-worker
-    restart: "no"
-    command: new
-    depends_on:
-      - ui-python
-    environment:
-      - SITE_NAME=${SITE_NAME}
-      - DB_ROOT_USER=${DB_ROOT_USER}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
-      - INSTALL_APPS=${INSTALL_APPS}
-    volumes:
-      - sites-vol:/home/frappe/frappe-bench/sites:rw
-
 volumes:
   assets-vol:
   sites-vol:
-  mariadb-vol:
-  redis-cache-vol:
-  redis-queue-vol:
-  redis-socketio-vol:
-  cert-vol:
-  
-
-
+  mariadb-vol:                                                                                                            redis-cache-vol:                                                                                                        redis-queue-vol:                                                                                                        redis-socketio-vol: 
