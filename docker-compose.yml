@@ -29,26 +29,26 @@ services:
       - cert-vol:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
-  erpnext-nginx:
-    image: rishira1/erpnext-nginx:${ERPNEXT_VERSION}
+  ui-nginx:
+    image: rishira1/ui-nginx:${UI_VERSION}
     restart: on-failure
     environment:
-      - FRAPPE_PY=erpnext-python
+      - FRAPPE_PY=ui-python
       - FRAPPE_PY_PORT=8000
       - FRAPPE_SOCKETIO=frappe-socketio
       - SOCKETIO_PORT=9000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.erpnext-nginx.rule=Host(${SITES})"
+      - "traefik.http.routers.ui-nginx.rule=Host(${SITES})"
       - "${ENTRYPOINT_LABEL}"
       - "${CERT_RESOLVER_LABEL}"
-      - "traefik.http.services.erpnext-nginx.loadbalancer.server.port=80"
+      - "traefik.http.services.ui-nginx.loadbalancer.server.port=80"
     volumes:
       - sites-vol:/var/www/html/sites:rw
       - assets-vol:/assets:rw
 
-  erpnext-python:
-    image: rishira1/erpnext-worker:${ERPNEXT_VERSION}
+  ui-python:
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     environment:
       - MARIADB_HOST=${MARIADB_HOST}
@@ -62,15 +62,15 @@ services:
       - assets-vol:/home/frappe/frappe-bench/sites/assets:rw
 
   frappe-socketio:
-    image: rishira1/frappe-socketio:${FRAPPE_VERSION}
+    image: frappe/frappe-socketio:${FRAPPE_VERSION}
     restart: on-failure
     depends_on:
       - redis-socketio
     volumes:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
-  erpnext-worker-default:
-    image: rishira1/erpnext-worker:${ERPNEXT_VERSION}
+  ui-worker-default:
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: worker
     depends_on:
@@ -79,8 +79,8 @@ services:
     volumes:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
-  erpnext-worker-short:
-    image: rishira1/erpnext-worker:${ERPNEXT_VERSION}
+  ui-worker-short:
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: worker
     environment:
@@ -91,8 +91,8 @@ services:
     volumes:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
-  erpnext-worker-long:
-    image: rishira1/erpnext-worker:${ERPNEXT_VERSION}
+  ui-worker-long:
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: worker
     environment:
@@ -103,8 +103,8 @@ services:
     volumes:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
-  erpnext-schedule:
-    image: rishira1/erpnext-worker:${ERPNEXT_VERSION}
+  ui-schedule:
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: schedule
     depends_on:
@@ -141,11 +141,11 @@ services:
       - mariadb-vol:/var/lib/mysql
 
   site-creator:
-    image: rishira1/erpnext-worker:${ERPNEXT_VERSION}
+    image: rishira1/ui-worker:${UI_VERSION}
     restart: "no"
     command: new
     depends_on:
-      - erpnext-python
+      - ui-python
     environment:
       - SITE_NAME=${SITE_NAME}
       - DB_ROOT_USER=${DB_ROOT_USER}

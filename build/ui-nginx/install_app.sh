@@ -15,6 +15,7 @@ install_packages git python2
 mkdir -p apps
 cd apps
 git clone --depth 1 https://github.com/frappe/frappe ${BRANCH}
+git clone --depth 1 https://github.com/frappe/erpnext ${BRANCH}
 git clone --depth 1 ${APP_REPO} ${BRANCH}
 
 cd /home/frappe/frappe-bench/apps/frappe
@@ -27,6 +28,8 @@ mkdir -p /home/frappe/frappe-bench/sites/assets/${APP_NAME}
 cp -R /home/frappe/frappe-bench/apps/${APP_NAME}/${APP_NAME}/public/* /home/frappe/frappe-bench/sites/assets/${APP_NAME}
 
 echo "rsync -a --delete /var/www/html/assets/${APP_NAME} /assets" > /rsync
+echo "rsync -a --delete /var/www/html/assets/frappe /assets" > /rsync
+echo "rsync -a --delete /var/www/html/assets/erpnext /assets" >> /rsync
 chmod +x /rsync
 
 rm /home/frappe/frappe-bench/sites/apps.txt
