@@ -37,12 +37,27 @@ services:
       - FRAPPE_PY_PORT=8000
       - FRAPPE_SOCKETIO=frappe-socketio
       - SOCKETIO_PORT=9000
+      - LETSENCRYPT_HOST=${SITES}
+      - VIRTUAL_HOST=${SITES}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ui-nginx.rule=Host(${SITES})"
       - "${ENTRYPOINT_LABEL}"
       - "${CERT_RESOLVER_LABEL}"
       - "traefik.http.services.ui-nginx.loadbalancer.server.port=80"
+    depends_on:
+      - ui-python
+      - frappe-socketio
+      - frappe-worker-default
+      - frappe-worker-long
+      - frappe-worker-short
+    links:
+      - ui-python
+      - frappe-socketio
+      - frappe-worker-default
+      - frappe-worker-long
+      - frappe-worker-short
     volumes:
       - sites-vol:/var/www/html/sites:rw
       - assets-vol:/assets:rw
@@ -69,17 +84,20 @@ services:
     volumes:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
-  ui-worker-default:
+  frappe-worker-default:
     image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: worker
     depends_on:
       - redis-queue
       - redis-cache
+    links:
+      - redis-queue
+      - redis-cache
     volumes:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
-  ui-worker-short:
+  frappe-worker-short:
     image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: worker
@@ -88,10 +106,13 @@ services:
     depends_on:
       - redis-queue
       - redis-cache
+    links:
+      - redis-queue
+      - redis-cache
     volumes:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
-  ui-worker-long:
+  frappe-worker-long:
     image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: worker
@@ -100,14 +121,20 @@ services:
     depends_on:
       - redis-queue
       - redis-cache
+    links:
+      - redis-queue
+      - redis-cache
     volumes:
       - sites-vol:/home/frappe/frappe-bench/sites:rw
 
-  ui-schedule:
+  frappe-schedule:
     image: rishira1/ui-worker:${UI_VERSION}
     restart: on-failure
     command: schedule
     depends_on:
+      - redis-queue
+      - redis-cache
+    links:
       - redis-queue
       - redis-cache
     volumes:
